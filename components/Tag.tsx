@@ -25,7 +25,7 @@ const styles = StyleSheet.create({
   tagText: {
     color: "#FFF",
     fontSize: 12,
-    fontWeight: "bold",
+    fontFamily: "PuritanRegular",
   },
 });
 

@@ -14,6 +14,7 @@ import Toast from "react-native-toast-message";
 
 // components
 import Menu from "@/components/Menu";
+import Header from "@/components/Header";
 import FilterOption from "@/components/FilterOption";
 import Listing from "@/components/Listing";
 
@@ -84,16 +85,7 @@ export default function Search() {
   return (
     <View style={styles.container}>
       {/* Top Section */}
-      <View style={styles.topSection}>
-        <View style={styles.titleContainer}>
-          <Text style={styles.title}>STUDYSPOT</Text>
-          <Image
-            source={require("../assets/images/book-icon.png")} // Replace with the correct path
-            style={styles.icon}
-          />
-        </View>
-        <Text style={styles.subtitle}>Find your next study spot here!</Text>
-      </View>
+      <Header />
 
       {/* Listings Section */}
       <View style={styles.listingsSection}>

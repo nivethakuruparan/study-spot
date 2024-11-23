@@ -5,7 +5,6 @@ import { useFonts } from "expo-font";
 export default function RootLayout() {
   const [loaded] = useFonts({
     OrelegaOneRegular: require("../assets/fonts/OrelegaOne-Regular.ttf"),
-    PavanamRegular: require("../assets/fonts/Pavanam-Regular.ttf"),
     PuritanBold: require("../assets/fonts/Puritan-Bold.ttf"),
     PuritanRegular: require("../assets/fonts/Puritan-Regular.ttf"),
     PuritanBoldItalic: require("../assets/fonts/Puritan-BoldItalic.ttf"),

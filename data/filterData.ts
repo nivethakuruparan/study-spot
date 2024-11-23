@@ -65,7 +65,7 @@ const filterData = [
       "Vending Machines Nearby",
       "View/Scenic Spot",
     ],
-    color: "#F94144",
+    color: "#5F67BF",
   },
   {
     title: "Reviews",

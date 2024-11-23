@@ -69,27 +69,27 @@ const Listing: React.FC<ListingProps> = ({
 
 const styles = StyleSheet.create({
   card: {
-    backgroundColor: "#F9F7E8",
+    backgroundColor: "#E9EDC9",
     borderRadius: 10,
     padding: 15,
     marginBottom: 20,
-    elevation: 3, // Shadow for Android
-    shadowColor: "#000", // Shadow for iOS
+    elevation: 3,
+    shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.2,
     shadowRadius: 4,
-    position: "relative", // For the favorite icon positioning
+    position: "relative",
   },
   favoriteIcon: {
     position: "absolute",
-    top: 10,
-    right: 10,
-    zIndex: 10,
+    top: 16,
+    right: 19,
+    zIndex: 16,
   },
   title: {
     fontSize: 18,
-    fontWeight: "bold",
-    color: "#65462A",
+    fontFamily: "OrelegaOneRegular",
+    color: "#8C5A2C",
     marginBottom: 10,
     paddingRight: 40, // Avoid overlap with the heart icon
   },
@@ -101,7 +101,8 @@ const styles = StyleSheet.create({
   },
   description: {
     fontSize: 14,
-    color: "#333",
+    fontFamily: "PuritanRegular",
+    color: "#65462A",
     marginBottom: 10,
   },
   tagsContainer: {
@@ -112,19 +113,25 @@ const styles = StyleSheet.create({
   buttonContainer: {
     flexDirection: "row",
     justifyContent: "space-between",
-    gap: 2, // Reduce the gap between the buttons
+    gap: 8,
   },
   button: {
-    flex: 1, // Each button takes up half the available width
-    backgroundColor: "#8C5A2C",
+    flex: 1,
+    backgroundColor: "#D4A373",
     paddingVertical: 10,
     alignItems: "center",
-    borderRadius: 8,
+    borderRadius: 20,
+    elevation: 3,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.5,
+    shadowRadius: 2,
   },
   buttonText: {
-    color: "#FFF",
-    fontSize: 14,
-    fontWeight: "bold",
+    color: "#FEFAE0",
+    fontSize: 16,
+    fontFamily: "PuritanBold",
+    textTransform: "uppercase",
   },
 });
 
