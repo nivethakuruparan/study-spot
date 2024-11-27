@@ -7,7 +7,7 @@ const Header = () => {
       <View style={styles.titleContainer}>
         <Text style={styles.title}>STUDYSPOT</Text>
         <Image
-          source={require("../assets/images/book-icon.png")} // Replace with the correct path
+          source={require("../assets/images/book-icon.png")}
           style={styles.icon}
         />
       </View>
@@ -36,7 +36,7 @@ const styles = StyleSheet.create({
     width: 30,
     height: 30,
     marginLeft: 4,
-    resizeMode: "contain", // Ensures the image scales properly
+    resizeMode: "contain",
   },
   subtitle: {
     fontSize: 16,

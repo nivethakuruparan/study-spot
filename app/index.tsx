@@ -5,7 +5,6 @@ import {
   TouchableOpacity,
   Modal,
   StyleSheet,
-  Image,
   ScrollView,
   Alert,
 } from "react-native";
@@ -17,15 +16,20 @@ import Menu from "@/components/Menu";
 import Header from "@/components/Header";
 import FilterOption from "@/components/FilterOption";
 import Listing from "@/components/Listing";
+import Review from "@/components/Review";
 
 // data
 import listingsData from "@/data/listingsData";
 import filterData from "@/data/filterData";
 
 export default function Search() {
-  const [isFilterVisible, setIsFilterVisible] = useState(false); // Control modal visibility
+  const [isFilterVisible, setIsFilterVisible] = useState(false); // Control filter modal visibility
+  const [isReviewVisible, setIsReviewVisible] = useState(false); // Control review modal visibility
   const [selectedFilters, setSelectedFilters] = useState<string[]>([]);
-  const [appliedFilters, setAppliedFilters] = useState<string[]>([]); // Applied filters
+  const [appliedFilters, setAppliedFilters] = useState<string[]>([]);
+  const [selectedReviews, setSelectedReviews] = useState<
+    { username: string; rating: number; description: string }[]
+  >([]); // Reviews for the selected listing
 
   const handleClose = () => {
     Alert.alert(
@@ -58,9 +62,9 @@ export default function Search() {
 
   // Reset filters
   const resetFilters = () => {
-    setSelectedFilters([]); // Clear selected filters
-    setAppliedFilters([]); // Clear applied filters
-    setIsFilterVisible(false); // Close modal
+    setSelectedFilters([]);
+    setAppliedFilters([]);
+    setIsFilterVisible(false);
   };
 
   // Filter listings based on applied filters
@@ -71,15 +75,23 @@ export default function Search() {
             listing.tags.some((tag) => tag.label === filter)
           )
         )
-      : listingsData; // Show all listings if no filters are applied
+      : listingsData;
 
   // Handle "Save to Favourites" notification
   const handleSaveToFavourites = () => {
     Toast.show({
       type: "success",
       text1: "Saved to Favourites",
-      visibilityTime: 2000, // Duration for which the notification is visible
+      visibilityTime: 1000,
     });
+  };
+
+  // Open Review Modal
+  const openReviewModal = (
+    reviews: { username: string; rating: number; description: string }[]
+  ) => {
+    setSelectedReviews(reviews);
+    setIsReviewVisible(true);
   };
 
   return (
@@ -87,7 +99,7 @@ export default function Search() {
       {/* Top Section */}
       <Header />
 
-      {/* Listings Section */}
+      {/* Listings Title Section */}
       <View style={styles.listingsSection}>
         <View style={styles.listingsRow}>
           <Text style={styles.listingsText}>View Listings</Text>
@@ -95,11 +107,12 @@ export default function Search() {
             style={styles.filterButton}
             onPress={() => setIsFilterVisible(true)}
           >
-            <FontAwesome5 name="sliders-h" size={30} color="#65462A" />
+            <FontAwesome5 name="sliders-h" size={24} color="#65462A" />
           </TouchableOpacity>
         </View>
       </View>
 
+      {/* Listings Section */}
       <ScrollView style={styles.listingsScroll}>
         {filteredListings.length > 0 ? (
           filteredListings.map((listing, index) => (
@@ -109,12 +122,15 @@ export default function Search() {
               description={listing.description}
               tags={listing.tags}
               image={listing.image}
-              onHeartPress={handleSaveToFavourites} // Pass notification handler to Listing component
+              reviews={listing.reviews} // Pass reviews to the listing
+              onHeartPress={handleSaveToFavourites}
+              onReadReviews={() => openReviewModal(listing.reviews)} // Open the review modal
             />
           ))
         ) : (
           <Text style={styles.noResultsText}>
-            No listings match the selected criteria.
+            No listings match the selected criteria. Please adjust your search
+            filters.
           </Text>
         )}
       </ScrollView>
@@ -128,7 +144,6 @@ export default function Search() {
       >
         <View style={styles.modalContainer}>
           <View style={styles.modalContent}>
-            {/* Close Button */}
             <TouchableOpacity
               style={styles.closeIconButton}
               onPress={handleClose}
@@ -148,25 +163,66 @@ export default function Search() {
                   title={filter.title}
                   options={filter.options}
                   color={filter.color}
-                  selectedFilters={selectedFilters} // Pass selected filters
+                  selectedFilters={selectedFilters}
                   onOptionChange={handleOptionChange}
                 />
               ))}
             </ScrollView>
-            {/* Reset Filters Button */}
             <TouchableOpacity
               style={[styles.actionButton, styles.resetButton]}
               onPress={resetFilters}
             >
               <Text style={styles.actionButtonText}>Reset Filters</Text>
             </TouchableOpacity>
-            {/* Apply Button */}
             <TouchableOpacity
               style={styles.actionButton}
               onPress={applyFilters}
             >
               <Text style={styles.actionButtonText}>Apply</Text>
             </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
+
+      {/* Review Modal */}
+      <Modal
+        visible={isReviewVisible}
+        transparent={true}
+        animationType="slide"
+        onRequestClose={() => setIsReviewVisible(false)}
+      >
+        <View style={styles.modalContainer}>
+          <View style={styles.modalContent}>
+            <TouchableOpacity
+              style={styles.closeIconButton}
+              onPress={() => setIsReviewVisible(false)}
+            >
+              <FontAwesome5 name="times" size={24} color="#8C5A2C" />
+            </TouchableOpacity>
+
+            <Text style={styles.modalTitle}>Reviews</Text>
+            {/* Overall Rating Subtitle */}
+            <Text style={styles.modalSubtitle}>
+              Study Spot Overall Rating:{" "}
+              {selectedReviews.length > 0
+                ? (
+                    selectedReviews.reduce(
+                      (acc, review) => acc + review.rating,
+                      0
+                    ) / selectedReviews.length
+                  ).toFixed(1)
+                : "N/A"}{" "}
+            </Text>
+            <ScrollView style={styles.scrollableSection}>
+              {selectedReviews.map((review, index) => (
+                <Review
+                  key={index}
+                  username={review.username}
+                  rating={review.rating}
+                  description={review.description}
+                />
+              ))}
+            </ScrollView>
           </View>
         </View>
       </Modal>
@@ -185,48 +241,23 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#FEFAE0",
   },
-  topSection: {
-    backgroundColor: "#65462A",
-    padding: 20,
-    paddingTop: 60,
-    paddingBottom: 10,
-  },
-  titleContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-  },
-  title: {
-    fontSize: 32,
-    color: "#FEFAE0",
-    fontFamily: "OrelegaOneRegular",
-  },
-  icon: {
-    width: 32,
-    height: 32,
-    marginLeft: 4,
-    resizeMode: "contain", // Ensures the image scales properly
-  },
-  subtitle: {
-    fontSize: 18,
-    color: "#FAEDCD",
-    fontFamily: "PuritanItalic",
-  },
   listingsSection: {
-    padding: 20,
+    paddingHorizontal: 20,
+    paddingVertical: 10,
   },
   listingsRow: {
     flexDirection: "row",
     alignItems: "flex-start",
   },
   listingsText: {
-    fontSize: 34,
+    fontSize: 32,
     fontFamily: "OrelegaOneRegular",
     textTransform: "uppercase",
     color: "#555E3B",
-    marginRight: 10, // Adjust space between text and icon
+    marginRight: 14,
   },
   filterButton: {
-    paddingTop: 2,
+    paddingTop: 4,
     backgroundColor: "#F9F7E8",
   },
   modalContainer: {
@@ -267,46 +298,39 @@ const styles = StyleSheet.create({
   scrollableSection: {
     backgroundColor: "#2D321F",
     paddingTop: 20,
-    maxHeight: "70%", // Adjust the height of the scrollable area
-    marginBottom: 30, // Space between scroll section and "Apply" button
-  },
-  filterSection: {
-    marginBottom: 16, // Space between filter sections
-  },
-  closeButton: {
-    padding: 10,
-    backgroundColor: "#8C5A2C",
+    maxHeight: "70%",
+    marginBottom: 20,
     borderRadius: 8,
-    alignItems: "center",
-  },
-  closeButtonText: {
-    color: "#FAEDCD",
-    fontSize: 16,
-    fontFamily: "PuritanBold",
-    textTransform: "uppercase",
   },
   listingsScroll: {
     paddingHorizontal: 20,
-    paddingTop: 10,
     marginBottom: 70,
   },
   noResultsText: {
     textAlign: "center",
     fontSize: 16,
-    color: "#999",
+    fontFamily: "PuritanBoldItalic",
+    color: "#65462A",
   },
   actionButton: {
     padding: 10,
-    backgroundColor: "#8C5A2C",
+    backgroundColor: "#D4A373",
     borderRadius: 8,
     alignItems: "center",
-    marginVertical: 10, // Space between buttons
+    marginVertical: 5,
+    fontFamily: "PuritanBoldItalic",
+    elevation: 3,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.5,
+    shadowRadius: 2,
   },
   resetButton: {
-    backgroundColor: "#E63946", // Red color for reset button
+    backgroundColor: "#65462A",
   },
   actionButtonText: {
-    color: "#FFF",
-    fontWeight: "bold",
+    color: "#FEFAE0",
+    fontSize: 16,
+    fontFamily: "PuritanBold",
   },
 });

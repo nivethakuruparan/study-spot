@@ -1,14 +1,16 @@
 import React, { useState } from "react";
 import { View, Text, StyleSheet, Image, TouchableOpacity } from "react-native";
 import { FontAwesome } from "@expo/vector-icons";
-import Tag from "./Tag"; // Import the Tag component
+import Tag from "./Tag";
 
 interface ListingProps {
   title: string;
   description: string;
-  tags: { label: string; color: string }[]; // Tags with label and color
-  image: string; // Path to the image file or URI
-  onHeartPress: () => void; // Callback function for saving to favorites
+  tags: { label: string; color: string }[];
+  image: string;
+  reviews: { username: string; rating: number; description: string }[]; // Add reviews property
+  onHeartPress: () => void; // Callback for saving to favorites
+  onReadReviews: () => void; // Callback for reading reviews
 }
 
 const Listing: React.FC<ListingProps> = ({
@@ -16,14 +18,16 @@ const Listing: React.FC<ListingProps> = ({
   description,
   tags,
   image,
+  reviews,
   onHeartPress,
+  onReadReviews,
 }) => {
   const [isFavorite, setIsFavorite] = useState(false);
 
   const toggleFavorite = () => {
     setIsFavorite((prevState) => !prevState);
     if (!isFavorite) {
-      onHeartPress(); // Show "Saved to Favourites" notification when favorited
+      onHeartPress();
     }
   };
 
@@ -59,7 +63,7 @@ const Listing: React.FC<ListingProps> = ({
         <TouchableOpacity style={styles.button}>
           <Text style={styles.buttonText}>Study Here</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.button}>
+        <TouchableOpacity style={styles.button} onPress={onReadReviews}>
           <Text style={styles.buttonText}>Read Reviews</Text>
         </TouchableOpacity>
       </View>
@@ -91,7 +95,7 @@ const styles = StyleSheet.create({
     fontFamily: "OrelegaOneRegular",
     color: "#8C5A2C",
     marginBottom: 10,
-    paddingRight: 40, // Avoid overlap with the heart icon
+    paddingRight: 40,
   },
   image: {
     width: "100%",
