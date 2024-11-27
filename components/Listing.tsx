@@ -8,9 +8,10 @@ interface ListingProps {
   description: string;
   tags: { label: string; color: string }[];
   image: string;
-  reviews: { username: string; rating: number; description: string }[]; // Add reviews property
-  onHeartPress: () => void; // Callback for saving to favorites
-  onReadReviews: () => void; // Callback for reading reviews
+  reviews: { username: string; rating: number; description: string }[];
+  onHeartPress: () => void;
+  onReadReviews: () => void;
+  isFavorite: boolean; // New prop
 }
 
 const Listing: React.FC<ListingProps> = ({
@@ -21,14 +22,13 @@ const Listing: React.FC<ListingProps> = ({
   reviews,
   onHeartPress,
   onReadReviews,
+  isFavorite, // New prop
 }) => {
-  const [isFavorite, setIsFavorite] = useState(false);
+  const [isFavoriteState, setIsFavoriteState] = useState(isFavorite); // Initialize with prop
 
   const toggleFavorite = () => {
-    setIsFavorite((prevState) => !prevState);
-    if (!isFavorite) {
-      onHeartPress();
-    }
+    setIsFavoriteState((prevState) => !prevState);
+    onHeartPress();
   };
 
   return (
@@ -38,7 +38,7 @@ const Listing: React.FC<ListingProps> = ({
         <FontAwesome
           name="heart"
           size={24}
-          color={isFavorite ? "red" : "gray"}
+          color={isFavoriteState ? "red" : "gray"}
         />
       </TouchableOpacity>
 

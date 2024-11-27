@@ -125,6 +125,7 @@ export default function Search() {
               reviews={listing.reviews} // Pass reviews to the listing
               onHeartPress={handleSaveToFavourites}
               onReadReviews={() => openReviewModal(listing.reviews)} // Open the review modal
+              isFavorite={false} // Default to not favorited on the search page
             />
           ))
         ) : (
@@ -311,6 +312,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontFamily: "PuritanBoldItalic",
     color: "#65462A",
+    marginTop: 20,
   },
   actionButton: {
     padding: 10,
