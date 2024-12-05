@@ -1,3 +1,7 @@
+💻 This project is a medium-fidelity prototype of a Campus Study Place Review App  <br />
+👩‍💻 This project is made by Nivetha Kuruparan for the course SFWRENG 4HC3 Assignment 2  <br />
+
+
 # Welcome to your Expo app 👋
 
 This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
